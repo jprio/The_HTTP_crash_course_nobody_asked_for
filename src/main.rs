@@ -49,8 +49,8 @@ mod tests {
             println!("Read {} bytes", buffer.len());
         }
     }
-    #[tokio::main]
-    async fn test_rusttls() {
+    #[tokio::test]
+    async fn test_rustls() {
         use std::sync::Arc;
 
         use hyper_rustls::ConfigBuilderExt;
