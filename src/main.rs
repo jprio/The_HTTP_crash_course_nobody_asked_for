@@ -36,10 +36,10 @@ mod tests {
         println!("Body: {:?}", body);
     }
     #[tokio::test]
-    async fn test_hyper_stream_body() {
+    async fn test_hyper_stream_body_http() {
         use futures::TryStreamExt;
         let response = hyper::Client::new()
-            .get("https://example.org".parse().unwrap())
+            .get("http://example.org".parse().unwrap())
             .await
             .unwrap();
 
@@ -48,6 +48,30 @@ mod tests {
         while let Some(buffer) = body.try_next().await.unwrap() {
             println!("Read {} bytes", buffer.len());
         }
+    }
+    #[tokio::test]
+    async fn test_hyper_stream_body_httpS() {
+        let conn = hyper_rustls::HttpsConnectorBuilder::new()
+            .with_native_roots()
+            .https_or_http()
+            .enable_http1()
+            .build();
+
+        let client = hyper::Client::builder().build::<_, hyper::Body>(conn);
+
+        let response = client
+            .get("https://example.org".parse().unwrap())
+            .await
+            .unwrap();
+
+        let body = String::from_utf8(
+            hyper::body::to_bytes(response.into_body())
+                .await
+                .unwrap()
+                .to_vec(),
+        )
+        .unwrap();
+        println!("response body: {body}");
     }
     #[tokio::test]
     async fn test_rustls() {
