@@ -110,18 +110,20 @@ mod tests {
     }
     #[tokio::test]
     async fn raw() -> color_eyre::Result<()> {
+        use super::http11;
+        use color_eyre::eyre::eyre;
         use nom::Offset;
         use rustls::{Certificate, ClientConfig, KeyLogFile, RootCertStore};
         use std::{str::FromStr, sync::Arc};
-
-        use super::http11;
-        use color_eyre::eyre::eyre;
         use tokio::{
             io::{AsyncReadExt, AsyncWriteExt},
             net::TcpStream,
         };
         use tracing::info;
-        /*
+        use tracing_subscriber::{
+            filter::targets::Targets, layer::SubscriberExt, util::SubscriberInitExt,
+        };
+
         let filter_layer =
             Targets::from_str(std::env::var("RUST_LOG").as_deref().unwrap_or("info")).unwrap();
         let format_layer = tracing_subscriber::fmt::layer();
@@ -129,7 +131,7 @@ mod tests {
             .with(filter_layer)
             .with(format_layer)
             .init();
-         */
+
         info!("Establishing a TCP connection...");
         let stream = TcpStream::connect("example.org:443").await.expect("msg");
         info!("Setting up TLS root certificate store");
