@@ -8,8 +8,8 @@ edition = "2021"
 [dependencies]
 color-eyre = "0.6.2"
 futures = "0.3.25"
-hyper = { version = "0.14.20", features = ["client", "tcp", "http1", "stream"] }
-hyper-rustls = "0.23.0"
+hyper = { version = "0.14.20", features = ["client", "tcp", "http1", "stream", "http2"] }
+hyper-rustls = { version = "0.23.0", features = ["http2"] }
 nom = "7.1.1"
 reqwest = "0.11.12"
 rustls = "0.20.7"
